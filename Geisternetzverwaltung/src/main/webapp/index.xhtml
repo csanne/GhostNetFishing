@@ -1,11 +1,37 @@
 <?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
 <h:head>
-  <title>Facelet Title</title>
+  <title>Ghost Net Fishing</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
 </h:head>
+<!-- Header mit Logo & Tabmenü -->
+<div class="header-container">
+  <img src="logo.png" alt="Logo" class="header-logo"/>
+  <span class="header-title">Shea Sepherd - Ghost Net Fishing</span>
+  <h:form>
+    <p:tabMenu activeIndex="0" styleClass="tab-menu">
+      <p:menuitem value="Startseite" outcome="index.xhtml" icon="pi pi-home"/>
+      <p:menuitem value="Meldung" outcome="melden.xhtml" icon="pi pi-pencil"/>
+      <p:menuitem value="Geisternetze" outcome="geisternetze.xhtml" icon="pi pi-list"/>
+      <p:menuitem value="Info" outcome="info.xhtml" icon="pi pi-info-circle"/>
+    </p:tabMenu>
+  </h:form>
+</div>
+
 <h:body>
-  Hallo Welt!
+  <h:form>
+    <p:panel header="Willkommen bei Ghost Net Fishing">
+      <p>Diese Anwendung hilft bei der Erfassung und Bergung von Geisternetzen. Jeder kann helfen, indem er Netze meldet oder sich zur Bergung einträgt.</p>
+      <p>Vielen Dank an alle Helfer, die sich für den Schutz der Meere einsetzen!</p>
+    </p:panel>
+    <p:panel header="🤝 Unterstützung">
+      <p>Sie möchten helfen oder spenden?</p>
+      <p>Kontakt: <a href="mailto:hilfe@sheasepherd.org">hilfe@sheasepherd.org</a></p>
+    </p:panel>
+  </h:form>
 </h:body>
 </html>
-
