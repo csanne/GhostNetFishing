@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Geisternetze</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</h:head>
+<!-- Header mit Logo & Tabmenü -->
+<div class="header-container">
+    <img src="logo.png" alt="Logo" class="header-logo"/>
+    <span class="header-title">Shea Sepherd - Ghost Net Fishing</span>
+    <h:form>
+        <p:tabMenu activeIndex="2" styleClass="tab-menu">
+            <p:menuitem value="Startseite" outcome="index.xhtml" icon="pi pi-home"/>
+            <p:menuitem value="Meldung" outcome="melden.xhtml" icon="pi pi-pencil"/>
+            <p:menuitem value="Geisternetze" outcome="geisternetze.xhtml" icon="pi pi-list"/>
+            <p:menuitem value="Info" outcome="info.xhtml" icon="pi pi-info-circle"/>
+        </p:tabMenu>
+    </h:form>
+</div>
+<h:body>
+    <h:form>
+        <p:panel header="Liste der gemeldeten Geisternetze">
+            <!-- Legende in einer Reihe -->
+            <h:panelGrid columns="6" styleClass="no-bottom-border" style=" margin-left: 10px;">
+                <p:commandButton id="aktualisierenButton"
+                                 value="Aktualisieren"
+                                 icon="pi pi-refresh"
+                                 actionListener="#{geisternetzBean.aktualisieren}"
+                                 update="tabelle"/>
+                <h:outputText value="Legende:" style="font-weight: bold; margin-left: 10px; margin-right: 10px;"/>
+                <h:outputText value="GEMELDET" styleClass="status-gemeldet"/>
+                <h:outputText value="BERGUNG_BEVORSTEHEND" styleClass="status-bergung"/>
+                <h:outputText value="GEBORGEN" styleClass="status-geborgen"/>
+                <h:outputText value="VERSCHOLLEN" styleClass="status-verschollen"/>
+            </h:panelGrid>
+            <h:panelGrid columns="2" style="width: 100%;">
+                <!-- Tabelle mit farbigen Zeilen -->
+                <p:dataTable id="tabelle" value="#{geisternetzBean.geisternetze}" var="netz" paginator="true" rows="8">
+                    <p:column headerText="ID" filterBy="#{netz.id}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.id}
+                    </p:column>
+                    <p:column headerText="Koordinaten" filterBy="#{netz.latitude}, #{netz.longitude}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.latitude}, #{netz.longitude}
+                    </p:column>
+                    <p:column headerText="Größe" filterBy="#{netz.size}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.size} m²
+                    </p:column>
+                    <p:column headerText="Status" filterBy="#{netz.status}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.status}
+                    </p:column>
+                    <p:column headerText="Meldende Person" filterBy="#{netz.meldendePerson.name}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.meldendePerson != null ? netz.meldendePerson.name : 'Anonym'}
+                    </p:column>
+                    <p:column headerText="Bergende Person" filterBy="#{netz.bergendePerson.name}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                        netz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                        netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
+                        #{netz.bergendePerson != null ? netz.bergendePerson.name : 'Noch nicht vergeben'}
+                    </p:column>
+                    <p:column headerText="Aktion" style="background-color: #{netz.status eq 'GEMELDET' ? '#d3d3d3' :
+                                                        netz.status eq 'BERGUNG_BEVORSTEHEND' ? '#fff3cd' :
+                                                        netz.status eq 'GEBORGEN' ? '#d4edda' :
+                                                        netz.status eq 'VERSCHOLLEN' ? '#f8d7da' : ''};">
+                        <p:commandButton value="Bergung öffnen" icon="pi pi-search"
+                                         actionListener="#{geisternetzBean.oeffneBergung(netz.id)}"
+                                         ajax="false"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

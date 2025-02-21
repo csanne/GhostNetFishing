@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Bergungsmenü</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</h:head>
+<!-- Header mit Logo & Tabmenü -->
+<div class="header-container">
+    <img src="logo.png" alt="Logo" class="header-logo"/>
+    <span class="header-title">Shea Sepherd - Ghost Net Fishing</span>
+    <h:form>
+        <p:tabMenu activeIndex="1" styleClass="tab-menu">
+            <p:menuitem value="Startseite" outcome="index.xhtml" icon="pi pi-home"/>
+            <p:menuitem value="Meldung" outcome="melden.xhtml" icon="pi pi-pencil"/>
+            <p:menuitem value="Geisternetze" outcome="geisternetze.xhtml" icon="pi pi-list"/>
+            <p:menuitem value="Info" outcome="info.xhtml" icon="pi pi-info-circle"/>
+        </p:tabMenu>
+    </h:form>
+</div>
+
+<h:body onload="#{geisternetzBean.loadNetz()}">
+    <h:form>
+        <p:panel header="Bergungsmenü für Geisternetz #{geisternetzBean.selectedNetz.id}">
+            <h:panelGrid columns="1" cellpadding="5" styleClass="no-bottom-border">
+                <h:outputLabel value="Status: #{geisternetzBean.selectedNetz.status}"
+                               styleClass="#{geisternetzBean.selectedNetz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                             geisternetzBean.selectedNetz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
+                             geisternetzBean.selectedNetz.status eq 'GEBORGEN' ? 'status-geborgen' :
+                             geisternetzBean.selectedNetz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}"/>
+            </h:panelGrid>
+            <br/>
+            <p:panelGrid columns="2" style="width: 50%;" columnClasses="labelColumn, valueColumn">
+                <h:outputLabel value="Breitengrad:" styleClass="bold-label"/>
+                <h:outputText value="#{geisternetzBean.selectedNetz.latitude}" />
+
+                <h:outputLabel value="Längengrad:" styleClass="bold-label"/>
+                <h:outputText value="#{geisternetzBean.selectedNetz.longitude}" />
+
+                <h:outputLabel value="Größe:" styleClass="bold-label"/>
+                <h:outputText value="#{geisternetzBean.selectedNetz.size} m²" />
+
+                <h:outputLabel value="Meldender Name:" styleClass="bold-label"/>
+                <h:outputText value="#{geisternetzBean.selectedNetz.meldendePerson != null ? geisternetzBean.selectedNetz.meldendePerson.name : 'Anonym'}" />
+
+                <h:outputLabel value="Meldende Telefonnummer:" styleClass="bold-label"/>
+                <h:outputText value="#{geisternetzBean.selectedNetz.meldendePerson != null ? geisternetzBean.selectedNetz.meldendePerson.telefonnummer : '-'}" />
+
+                <h:outputLabel value="Bergender Name:" styleClass="bold-label"
+                               rendered="#{geisternetzBean.selectedNetz.bergendePerson != null}" />
+                <h:outputText value="#{geisternetzBean.selectedNetz.bergendePerson.name}"
+                              rendered="#{geisternetzBean.selectedNetz.bergendePerson != null}" />
+
+                <h:outputLabel value="Bergende Telefonnummer:" styleClass="bold-label"
+                               rendered="#{geisternetzBean.selectedNetz.bergendePerson != null}" />
+                <h:outputText value="#{geisternetzBean.selectedNetz.bergendePerson.telefonnummer}"
+                              rendered="#{geisternetzBean.selectedNetz.bergendePerson != null}" />
+            </p:panelGrid>
+
+            <p:separator />
+
+            <h:outputLabel value="Bitte geben Sie Ihre Daten ein, um den Status zu ändern:" style="font-weight:bold;" />
+            <h:panelGrid columns="2" cellpadding="5" styleClass="no-bottom-border">
+                <p:commandButton value="Daten des Meldenden übernehmen" icon="pi pi-user"
+                                 actionListener="#{geisternetzBean.datenDesMeldersUebernehmen}"
+                                 update="@form"
+                                 process="@this"
+                                 rendered="#{geisternetzBean.selectedNetz.meldendePerson != null}"
+                                 immediate="true"/>
+
+                <p:commandButton value="Daten des Bergenden übernehmen" icon="pi pi-user"
+                                 actionListener="#{geisternetzBean.datenDesBergendenUebernehmen}"
+                                 update="@form"
+                                 process="@this"
+                                 rendered="#{geisternetzBean.selectedNetz.bergendePerson != null}"
+                                 immediate="true"/>
+            </h:panelGrid>
+            <h:panelGrid columns="2" cellpadding="5" styleClass="no-bottom-border">
+                <h:outputLabel for="bergenderName" value="Ihr Name:" />
+                <p:inputText id="bergenderName" value="#{geisternetzBean.bergenderName}" required="true">
+                    <p:ajax event="keyup" listener="#{geisternetzBean.pruefeBerechtigung}" update="statusButtons statusInfo adminPanel" />
+                </p:inputText>
+
+                <h:outputLabel for="bergendeTelefonnummer" value="Ihre Telefonnummer:" />
+                <p:inputText id="bergendeTelefonnummer" value="#{geisternetzBean.bergendeTelefonnummer}" required="true">
+                    <p:ajax event="keyup" listener="#{geisternetzBean.pruefeBerechtigung}" update="statusButtons statusInfo adminPanel" />
+                </p:inputText>
+            </h:panelGrid>
+            <!-- Anzeige der Berechtigungsprüfung -->
+            <h:outputText id="statusInfo"
+                          value="#{geisternetzBean.istBerechtigt ? '✅ Berechtigt' : '❌ Nicht berechtigt'}"
+                          style="font-weight: bold; color: #{geisternetzBean.istBerechtigt ? 'green' : 'red'};"
+                          rendered="#{geisternetzBean.selectedNetz.status ne 'GEMELDET'}"/>
+            <p:separator />
+
+            <!-- Status-Buttons: Aktualisieren sich live, sobald Name/Telefonnummer eingegeben wird -->
+            <h:panelGroup id="statusButtons">
+                <p:commandButton value="Bergung annehmen" icon="pi pi-flag"
+                                 actionListener="#{geisternetzBean.startBergung}"
+                                 update="@form"
+                                 style="background-color: black; color: white;"
+                                 rendered="#{geisternetzBean.selectedNetz.status eq 'GEMELDET'}"/>
+
+                <p:commandButton value="Bergung abschließen" icon="pi pi-check"
+                                 actionListener="#{geisternetzBean.bergungAbschliessen}"
+                                 update="@form"
+                                 style="background-color: green; color: white;"
+                                 rendered="#{geisternetzBean.selectedNetz.status eq 'BERGUNG_BEVORSTEHEND'
+                     and geisternetzBean.istBerechtigt}" />
+
+                <p:commandButton value="Verschollen melden" icon="pi pi-exclamation-triangle"
+                                 actionListener="#{geisternetzBean.verschollenMelden}"
+                                 update="@form"
+                                 style="background-color: red; color: white;"
+                                 rendered="#{geisternetzBean.selectedNetz.status eq 'BERGUNG_BEVORSTEHEND'
+                     and geisternetzBean.istBerechtigt}" />
+
+                <p:commandButton value="Bergung abbrechen" icon="pi pi-undo"
+                                 actionListener="#{geisternetzBean.bergungAbbrechen}"
+                                 update="@form"
+                                 style="background-color: orange; color: white;"
+                                 rendered="#{geisternetzBean.selectedNetz.status eq 'BERGUNG_BEVORSTEHEND'
+                     and geisternetzBean.istBerechtigt}" />
+            </h:panelGroup>
+
+            <!-- Admin-Panel: Nur sichtbar für Admins -->
+            <h:panelGroup id="adminPanel">
+                <p:separator rendered="#{geisternetzBean.istAdmin}"/>
+                <h:outputLabel value="Admin-Panel:" style="font-weight: bold; color: red;" rendered="#{geisternetzBean.istAdmin}"/>
+
+                <!-- Dropdown für Statusänderung -->
+                <p:selectOneMenu value="#{geisternetzBean.selectedNetz.status}" rendered="#{geisternetzBean.istAdmin}">
+                    <f:selectItem itemLabel="GEMELDET" itemValue="GEMELDET"/>
+                    <f:selectItem itemLabel="BERGUNG_BEVORSTEHEND" itemValue="BERGUNG_BEVORSTEHEND"/>
+                    <f:selectItem itemLabel="GEBORGEN" itemValue="GEBORGEN"/>
+                    <f:selectItem itemLabel="VERSCHOLLEN" itemValue="VERSCHOLLEN"/>
+                    <p:ajax listener="#{geisternetzBean.statusManuellSetzen}" update="@form"/>
+                </p:selectOneMenu>
+
+                <!-- Lösch-Button -->
+                <p:commandButton value="Geisternetz löschen" icon="pi pi-trash"
+                                 actionListener="#{geisternetzBean.geisternetzLoeschen}"
+                                 update="@form"
+                                 style="background-color: red; color: white;" rendered="#{geisternetzBean.istAdmin}"/>
+            </h:panelGroup>
+            <p:commandButton value="Zurück" icon="pi pi-arrow-left"
+                             action="geisternetze.xhtml?faces-redirect=true"
+                             ajax="false"
+                             immediate="true"/>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>
