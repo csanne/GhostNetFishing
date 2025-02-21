@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Geisternetz melden</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</h:head>
+<!-- Header mit Logo & Tabmenü -->
+<div class="header-container">
+    <img src="logo.png" alt="Logo" class="header-logo"/>
+    <span class="header-title">Shea Sepherd - Ghost Net Fishing</span>
+    <h:form>
+        <p:tabMenu activeIndex="1" styleClass="tab-menu">
+            <p:menuitem value="Startseite" outcome="index.xhtml" icon="pi pi-home"/>
+            <p:menuitem value="Meldung" outcome="melden.xhtml" icon="pi pi-pencil"/>
+            <p:menuitem value="Geisternetze" outcome="geisternetze.xhtml" icon="pi pi-list"/>
+            <p:menuitem value="Info" outcome="info.xhtml" icon="pi pi-info-circle"/>
+        </p:tabMenu>
+    </h:form>
+</div>
+<h:body>
+    <h:form>
+        <p:panel header="Geisternetz melden">
+            <h:outputLabel value="Geben Sie hier die zur Bergung benötigten Informationen über das gesichtete Geisternetz ein." style="font-weight: lighter;" />
+            <h:panelGrid columns="3" cellpadding="5" styleClass="no-bottom-border">
+                <h:outputLabel for="latitude" value="Breitengrad:" />
+                <p:inputText id="latitude" value="#{geisternetzBean.latitude}" required="true">
+                    <f:validateDoubleRange minimum="-90.0" maximum="90.0"/>
+                    <p:ajax event="blur" update="latitudeMessage"/>
+                </p:inputText>
+                <p:message for="latitude" id="latitudeMessage" style="color: red;"/>
+
+                <h:outputLabel for="longitude" value="Längengrad:" />
+                <p:inputText id="longitude" value="#{geisternetzBean.longitude}" required="true">
+                    <f:validateDoubleRange minimum="-180.0" maximum="180.0"/>
+                    <p:ajax event="blur" update="longitudeMessage"/>
+                </p:inputText>
+                <p:message for="longitude" id="longitudeMessage" style="color: red;"/>
+                <h:outputLabel for="size" value="Größe (m²):" />
+                <p:inputText id="size" value="#{geisternetzBean.size}" required="true">
+                    <f:validateDoubleRange minimum="0.1" maximum="10000.0"/>
+                    <p:ajax event="blur" update="sizeMessage"/>
+                </p:inputText>
+                <p:message for="size" id="sizeMessage" style="color: red;"/>
+            </h:panelGrid>
+            <p:separator />
+            <h:outputLabel value="Persönliche Angaben" style="font-weight:bold;" />
+            <br/>
+            <h:outputLabel value="Geben Sie hier die zur Meldung benötigten Informationen ein oder verzichten Sie bei anonymer Meldung darauf." style="font-weight: lighter;" />
+            <h:panelGrid columns="3" cellpadding="5" styleClass="no-bottom-border">
+                <h:outputLabel for="name" value="Ihr Name:" />
+                <p:inputText id="name" value="#{geisternetzBean.meldenderName}">
+                    <f:validateRegex pattern="^[A-Za-zÄÖÜäöüß\s]{2,}$" />
+                    <p:ajax event="blur" update="nameMessage"/>
+                </p:inputText>
+                <p:message for="name" id="nameMessage" style="color: red;"/>
+                <h:outputLabel for="telefonnummer" value="Telefonnummer:" />
+                <p:inputText id="telefonnummer" value="#{geisternetzBean.meldendeTelefonnummer}">
+                    <f:validateRegex pattern="^\d+$" />
+                    <p:ajax event="blur" update="telefonnummerMessage"/>
+                </p:inputText>
+                <p:message for="telefonnummer" id="telefonnummerMessage" style="color: red;"/>
+            </h:panelGrid>
+            <p:commandButton value="Melden" action="#{geisternetzBean.melden}" ajax="false" />
+        </p:panel>
+    </h:form>
+
+</h:body>
+</html>
