@@ -1,9 +1,12 @@
 # Ghost Net Fishing - Fallstudie
-Repository für die Fallstudie "Ghost Net Fishing"
-Autor: Colin Sanne
-Kurs: IPWA02-01   
-Studiengang: B. Sc. Softwareentwicklung
-Tutor: Alexander Christopher Bock
+Repository für eine Fallstudie der IU Internationale Hochschule
+
+| Fallstudie  | Ghost Net Fishing          |
+|-------------|----------------------------|
+| Autor       | Colin Sanne                |
+| Kurs        | IPWA02-01                  |
+| Studiengang | B. Sc. Softwareentwicklung |
+| Tutor       | Alexander Christopher Bock |
 
 ## Anwendungs- und Maven-Versionen
 
@@ -13,7 +16,7 @@ Tutor: Alexander Christopher Bock
 | Tomcat        | 10.1.28    |
 | MySQL         | 9.2        |
 
-**Maven** Versionen
+**Maven-Versionen**
 
 | Paket                      | Version     |
 |----------------------------|-------------|
@@ -38,31 +41,32 @@ Die Anbindung erfolgt über die Datei persistence.xml mit den folgenden Zugangsd
 | Passwort  | Sql3103           |
 | Datenbank | ghost_net_fishing |
 
-Die Datenbank kann manuell erstellt und mit dem bereitgestellten Dump-File importiert werden. (ghost_net_fishing_dump.sql)
+Die Datenbank kann manuell erstellt und mit dem bereitgestellten Dump-File importiert werden. _(ghost_net_fishing_dump.sql)_
 Falls MySQL bereits installiert ist, öffnen Sie die Eingabeaufforderung (cmd) und erstellen Sie die Datenbank mit folgendem Befehl:
 
-mysql -u root -p
+`mysql -u root -p`
 
 Geben Sie das Passwort "Sql3103" ein und erstellen Sie die Datenbank mit:
 
-CREATE DATABASE ghost_net_fishing;
-ALTER DATABASE ghost_net_fishing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+`CREATE DATABASE ghost_net_fishing;
+ALTER DATABASE ghost_net_fishing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 
 Falls die Dump-Datei ghost_net_fishing_dump.sql importiert werden soll, navigieren Sie im Terminal in den Ordner, in dem sich die Datei befindet. Falls die Datei auf dem Desktop liegt, verwenden Sie:
 
-cd C:\Users\DEIN-BENUTZERNAME\Desktop
+`cd C:\Users\DEIN-BENUTZERNAME\Desktop`
 
 Dann führen Sie folgenden Befehl aus:
 
-mysql -u root -p ghost_net_fishing < ghost_net_fishing_dump.sql
+`mysql -u root -p ghost_net_fishing < ghost_net_fishing_dump.sql`
 
 Falls Sie PowerShell nutzen:
 
-Get-Content ghost_net_fishing_dump.sql | mysql -u root -p ghost_net_fishing
+`Get-Content ghost_net_fishing_dump.sql | mysql -u root -p ghost_net_fishing`
 
 ## Anbindung der Datenbank
-Nach der erfolgreichen Einrichtung kann die Datenbank in IntelliJ angebunden werden. Dazu in IntelliJ unter View > Tool Windows > Database eine neue Verbindung erstellen. 
-Als Datenquelle MySQL wählen und folgende Verbindungsdaten eintragen:
+Nach der erfolgreichen Einrichtung kann die Datenbank in IntelliJ angebunden werden. 
+Dazu in IntelliJ unter _View > Tool Windows > Database_ eine neue Verbindung erstellen. 
+Als Datenquelle **MySQL** wählen und folgende Verbindungsdaten eintragen:
 
 | Name     | Value             |
 |----------|-------------------|
