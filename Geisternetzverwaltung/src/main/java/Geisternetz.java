@@ -1,7 +1,6 @@
 import jakarta.persistence.*;
 
 // Definiert die JPA-Entity für Geisternetze
-
 @Entity // Markiert die Klasse als JPA-Entity
 @Table(name = "Geisternetz") // Setzt den Tabellennamen in der Datenbank
 public class Geisternetz {

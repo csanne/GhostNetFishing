@@ -47,7 +47,8 @@
                         netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
                         #{netz.id}
                     </p:column>
-                    <p:column headerText="Koordinaten" filterBy="#{netz.latitude}, #{netz.longitude}" filterMatchMode="contains" styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
+                    <p:column headerText="Koordinaten" filterBy="#{netz.latitude}, #{netz.longitude}" filterMatchMode="contains"
+                              styleClass="#{netz.status eq 'GEMELDET' ? 'status-gemeldet' :
                         netz.status eq 'BERGUNG_BEVORSTEHEND' ? 'status-bergung' :
                         netz.status eq 'GEBORGEN' ? 'status-geborgen' :
                         netz.status eq 'VERSCHOLLEN' ? 'status-verschollen' : ''}">
