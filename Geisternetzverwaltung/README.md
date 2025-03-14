@@ -1,4 +1,6 @@
 # Ghost Net Fishing - Fallstudie
+<img height="80" src="/src/main/webapp/logoGhostNet_ohneBG.png" width="80"/>
+
 Repository für eine Fallstudie der IU Internationale Hochschule
 
 | Fallstudie  | Ghost Net Fishing          |
