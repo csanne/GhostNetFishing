@@ -53,7 +53,8 @@ Geben Sie das Passwort "Sql3103" ein und erstellen Sie die Datenbank mit:
 `CREATE DATABASE ghost_net_fishing;
 ALTER DATABASE ghost_net_fishing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 
-Falls die Dump-Datei ghost_net_fishing_dump.sql importiert werden soll, navigieren Sie im Terminal in den Ordner, in dem sich die Datei befindet. Falls die Datei auf dem Desktop liegt, verwenden Sie:
+Falls die Dump-Datei ghost_net_fishing_dump.sql importiert werden soll, verlassen Sie das mysql Menü mit `\q` und navigieren Sie im Terminal in den Ordner, in dem sich die Datei befindet. 
+Sollte die Datei auf dem Desktop liegen, verwenden Sie:
 
 `cd C:\Users\DEIN-BENUTZERNAME\Desktop`
 
